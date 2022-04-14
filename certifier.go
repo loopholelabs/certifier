@@ -129,7 +129,7 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 				c.Logger().Warnf("received invalid cid/domain %s (ID %d)\n", question.Name, r.Id)
 			}
 		case dns.TypeA, dns.TypeAAAA, dns.TypeCNAME:
-			if qualifiers := strings.SplitN(question.Name, ".", 3); len(qualifiers) == 3 && qualifiers[2] == c.root {
+			if qualifiers := strings.SplitN(question.Name, ".", 2); len(qualifiers) == 2 && qualifiers[1] == c.root {
 				cnameRecord := &dns.CNAME{
 					Hdr: dns.RR_Header{
 						Name:   dns.Fqdn(question.Name),
