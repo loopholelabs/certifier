@@ -158,22 +158,6 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 			} else {
 				c.Logger().Warnf("received NS query for invalid domain '%s' (ID %d)\n", question.Name, r.Id)
 			}
-		//case dns.TypeA, dns.TypeAAAA, dns.TypeCNAME:
-		//	if qualifiers := strings.SplitN(question.Name, ".", 2); len(qualifiers) == 2 && qualifiers[1] == c.root {
-		//		cnameRecord := &dns.CNAME{
-		//			Hdr: dns.RR_Header{
-		//				Name:   dns.Fqdn(question.Name),
-		//				Rrtype: dns.TypeCNAME,
-		//				Class:  dns.ClassINET,
-		//				Ttl:    3600,
-		//			},
-		//			Target: c.public,
-		//		}
-		//		c.Logger().Infof("received lookup for domain %s (ID %d), responding with '%+v'\n", question.Name, r.Id, cnameRecord)
-		//		answers = append(answers, cnameRecord)
-		//	} else {
-		//		c.Logger().Warnf("received lookup for invalid domain %s (ID %d)\n", question.Name, r.Id)
-		//	}
 		default:
 			c.Logger().Warnf("received invalid question type %d (ID %d)\n", question.Qtype, r.Id)
 		}
