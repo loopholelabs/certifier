@@ -167,7 +167,7 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 				soaRecord := &dns.SOA{
 					Hdr: dns.RR_Header{
 						Name:   dns.Fqdn(question.Name),
-						Rrtype: dns.TypeNS,
+						Rrtype: dns.TypeSOA,
 						Class:  dns.ClassINET,
 						Ttl:    86400,
 					},
@@ -186,7 +186,7 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 				soaRecord := &dns.SOA{
 					Hdr: dns.RR_Header{
 						Name:   dns.Fqdn(question.Name),
-						Rrtype: dns.TypeNS,
+						Rrtype: dns.TypeSOA,
 						Class:  dns.ClassINET,
 						Ttl:    86400,
 					},
@@ -205,7 +205,7 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 				soaRecord := &dns.SOA{
 					Hdr: dns.RR_Header{
 						Name:   dns.Fqdn(question.Name),
-						Rrtype: dns.TypeNS,
+						Rrtype: dns.TypeSOA,
 						Class:  dns.ClassINET,
 						Ttl:    86400,
 					},
