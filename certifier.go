@@ -33,13 +33,14 @@ const (
 
 type Certifier struct {
 	root    string
+	public  string
 	server  *dns.Server
 	renewer *renewer.Renewer
 	storage storage.Storage
 	logger  logging.Logger
 }
 
-func New(root string, opts ...Option) *Certifier {
+func New(root string, public string, opts ...Option) *Certifier {
 	options := loadOptions(opts...)
 
 	if root[len(root)-1] != '.' {
@@ -48,6 +49,7 @@ func New(root string, opts ...Option) *Certifier {
 
 	return &Certifier{
 		root:    root,
+		public:  dns.Fqdn(public),
 		renewer: renewer.New(options.TrustedNameServers, options.Storage),
 		storage: options.Storage,
 		logger:  options.Logger,
@@ -125,6 +127,22 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 				}
 			} else {
 				c.Logger().Warnf("received invalid cid/domain %s (ID %d)\n", question.Name, r.Id)
+			}
+		case dns.TypeA, dns.TypeAAAA, dns.TypeCNAME:
+			if qualifiers := strings.SplitN(question.Name, ".", 3); len(qualifiers) == 3 && qualifiers[2] == c.root {
+				cnameRecord := &dns.CNAME{
+					Hdr: dns.RR_Header{
+						Name:   dns.Fqdn(question.Name),
+						Rrtype: dns.TypeCNAME,
+						Class:  dns.ClassINET,
+						Ttl:    3600,
+					},
+					Target: c.public,
+				}
+				c.Logger().Infof("received lookup for domain %s (ID %d), responding with '%+v'\n", question.Name, r.Id, cnameRecord)
+				answers = append(answers, cnameRecord)
+			} else {
+				c.Logger().Warnf("received lookup for invalid domain %s (ID %d)\n", question.Name, r.Id)
 			}
 		default:
 			c.Logger().Warnf("received invalid question type %d (ID %d)\n", question.Qtype, r.Id)

@@ -26,6 +26,7 @@ import (
 var (
 	listen string
 	root   string
+	public string
 )
 
 func main() {
@@ -36,9 +37,10 @@ func main() {
 
 	flag.StringVar(&listen, "listen", "", "set the listen address for certifier")
 	flag.StringVar(&root, "root", "", "set the root domain for certifier")
+	flag.StringVar(&public, "public", "", "set the publicly resolvable domain that resolves to certifier")
 	flag.Parse()
 
-	c := certifier.New(root, certifier.WithLogger(logger), certifier.WithStorage(storage))
+	c := certifier.New(root, public, certifier.WithLogger(logger), certifier.WithStorage(storage))
 
 	if err := c.Start(listen); err != nil {
 		panic(err)
