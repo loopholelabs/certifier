@@ -163,7 +163,26 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 				c.Logger().Warnf("received NS query for invalid domain '%s' (ID %d)\n", question.Name, r.Id)
 			}
 		case dns.TypeSOA:
-			if qualifiers := strings.SplitN(question.Name, ".", 3); len(qualifiers) == 3 && qualifiers[2] == c.root {
+			if question.Name == c.root {
+				soaRecord := &dns.SOA{
+					Hdr: dns.RR_Header{
+						Name:   dns.Fqdn(question.Name),
+						Rrtype: dns.TypeNS,
+						Class:  dns.ClassINET,
+						Ttl:    86400,
+					},
+					Ns:      c.public,
+					Mbox:    utils.JoinStrings("admin.", c.public),
+					Serial:  c.serial,
+					Refresh: 14400,
+					Retry:   3600,
+					Expire:  604800,
+					Minttl:  86400,
+				}
+				c.Logger().Infof("received SOA query for valid domain '%s' (ID %d), responding with NS '%s', Serial %d, and Mbox '%s'\n", question.Name, r.Id, soaRecord.Ns, soaRecord.Serial, soaRecord.Mbox)
+				answers = append(answers, soaRecord)
+				return
+			} else if qualifiers := strings.SplitN(question.Name, ".", 2); len(qualifiers) == 2 && qualifiers[1] == c.root {
 				soaRecord := &dns.SOA{
 					Hdr: dns.RR_Header{
 						Name:   dns.Fqdn(question.Name),
@@ -183,7 +202,7 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 				answers = append(answers, soaRecord)
 				return
 			} else {
-				c.Logger().Warnf("received SOA query for invalid cid/domain '%s' (ID %d)\n", question.Name, r.Id)
+				c.Logger().Warnf("received SOA query for invalid domain '%s' (ID %d)\n", question.Name, r.Id)
 			}
 		default:
 			c.Logger().Warnf("received invalid question type %d (ID %d)\n", question.Qtype, r.Id)
