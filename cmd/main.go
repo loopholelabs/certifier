@@ -17,9 +17,15 @@
 package main
 
 import (
+	"flag"
 	"github.com/loopholelabs/certifier"
 	"github.com/loopholelabs/certifier/pkg/storage/memory"
 	"github.com/loopholelabs/logging"
+)
+
+var (
+	listen string
+	root   string
 )
 
 func main() {
@@ -28,9 +34,13 @@ func main() {
 
 	storage := memory.New()
 
-	c := certifier.New("acme.localhost", certifier.WithLogger(logger), certifier.WithStorage(storage))
+	flag.StringVar(&listen, "listen", "", "set the listen address for certifier")
+	flag.StringVar(&root, "root", "", "set the root domain for certifier")
+	flag.Parse()
 
-	if err := c.Start("0.0.0.0:8553"); err != nil {
+	c := certifier.New(root, certifier.WithLogger(logger), certifier.WithStorage(storage))
+
+	if err := c.Start(listen); err != nil {
 		panic(err)
 	}
 }
