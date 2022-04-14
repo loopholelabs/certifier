@@ -67,14 +67,19 @@ func main() {
 
 	storage.SetCID("userid", "testcid")
 
-	privateKey, err := rsa.GenerateKey(rand.Reader, 4096)
+	clientPrivateKey, err := rsa.GenerateKey(rand.Reader, 4096)
+	if err != nil {
+		panic(err)
+	}
+
+	certificatePrivateKey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
 		panic(err)
 	}
 
 	acmeUser := &User{
 		Email: "testemail@testemail.com",
-		Key:   privateKey,
+		Key:   clientPrivateKey,
 	}
 
 	acmeConfig := lego.NewConfig(acmeUser)
@@ -98,7 +103,7 @@ func main() {
 	go func() {
 		time.Sleep(time.Second * 5)
 		logger.Infof("Starting Cert Renewal, expecting TXT for _acme-challenge.testdomain.loopholelabs.com to point to testdomain-loopholelabs-com.testcid.%s", root)
-		cert, err := c.Renew("userid", "testdomain.loopholelabs.com", acmeClient, privateKey)
+		cert, err := c.Renew("userid", "testdomain.loopholelabs.com", acmeClient, certificatePrivateKey)
 		if err != nil {
 			panic(err)
 		}
