@@ -20,6 +20,7 @@ import (
 	"crypto/rsa"
 	"github.com/go-acme/lego/v4/certificate"
 	"github.com/go-acme/lego/v4/lego"
+	"github.com/loopholelabs/certifier/internal/utils"
 	"github.com/loopholelabs/certifier/pkg/renewer"
 	"github.com/loopholelabs/certifier/pkg/storage"
 	"github.com/loopholelabs/logging"
@@ -34,13 +35,14 @@ const (
 type Certifier struct {
 	root    string
 	public  string
+	serial  uint32
 	server  *dns.Server
 	renewer *renewer.Renewer
 	storage storage.Storage
 	logger  logging.Logger
 }
 
-func New(root string, public string, opts ...Option) *Certifier {
+func New(root string, public string, serial uint32, opts ...Option) *Certifier {
 	options := loadOptions(opts...)
 
 	if root[len(root)-1] != '.' {
@@ -50,6 +52,7 @@ func New(root string, public string, opts ...Option) *Certifier {
 	return &Certifier{
 		root:    root,
 		public:  dns.Fqdn(public),
+		serial:  serial,
 		renewer: renewer.New(options.TrustedNameServers, options.Storage, options.Logger),
 		storage: options.Storage,
 		logger:  options.Logger,
@@ -158,6 +161,29 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 				return
 			} else {
 				c.Logger().Warnf("received NS query for invalid domain '%s' (ID %d)\n", question.Name, r.Id)
+			}
+		case dns.TypeSOA:
+			if qualifiers := strings.SplitN(question.Name, ".", 3); len(qualifiers) == 3 && qualifiers[2] == c.root {
+				soaRecord := &dns.SOA{
+					Hdr: dns.RR_Header{
+						Name:   dns.Fqdn(question.Name),
+						Rrtype: dns.TypeNS,
+						Class:  dns.ClassINET,
+						Ttl:    86400,
+					},
+					Ns:      c.public,
+					Mbox:    utils.JoinStrings("admin.", c.public),
+					Serial:  c.serial,
+					Refresh: 14400,
+					Retry:   3600,
+					Expire:  604800,
+					Minttl:  86400,
+				}
+				c.Logger().Infof("received SOA query for valid domain '%s' (ID %d), responding with NS '%s', Serial %d, and Mbox '%s'\n", question.Name, r.Id, soaRecord.Ns, soaRecord.Serial, soaRecord.Mbox)
+				answers = append(answers, soaRecord)
+				return
+			} else {
+				c.Logger().Warnf("received SOA query for invalid cid/domain '%s' (ID %d)\n", question.Name, r.Id)
 			}
 		default:
 			c.Logger().Warnf("received invalid question type %d (ID %d)\n", question.Qtype, r.Id)

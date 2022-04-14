@@ -63,7 +63,8 @@ func main() {
 	flag.StringVar(&public, "public", "", "set the publicly resolvable domain that resolves to certifier")
 	flag.Parse()
 
-	c := certifier.New(root, public, certifier.WithLogger(logger), certifier.WithStorage(storage))
+	serial := uint32(0)
+	c := certifier.New(root, public, serial, certifier.WithLogger(logger), certifier.WithStorage(storage))
 
 	storage.SetCID("userid", "testcid")
 
