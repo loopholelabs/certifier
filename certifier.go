@@ -92,7 +92,7 @@ func (c *Certifier) handler(w dns.ResponseWriter, r *dns.Msg) {
 	m := new(dns.Msg)
 	m.SetReply(r)
 	m.Compress = false
-	m.RecursionAvailable = false
+	m.RecursionAvailable = true
 
 	switch r.Opcode {
 	case dns.OpcodeQuery:
