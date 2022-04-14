@@ -42,6 +42,9 @@ func main() {
 
 	c := certifier.New(root, public, certifier.WithLogger(logger), certifier.WithStorage(storage))
 
+	storage.SetCID("userid", "cid")
+	storage.SetChallenge("cid", "test.com", "password")
+
 	if err := c.Start(listen); err != nil {
 		panic(err)
 	}
