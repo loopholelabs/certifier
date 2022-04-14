@@ -129,7 +129,7 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 				c.Logger().Warnf("received TXT query for invalid cid/domain '%s' (ID %d)\n", question.Name, r.Id)
 			}
 		case dns.TypeNS:
-			if len(question.Name) == len(c.root)+1 && question.Name[:len(c.root)] == c.root {
+			if len(question.Name) == len(c.root)+1 && question.Name[:len(c.root)-1] == c.root {
 				nsRecord := &dns.NS{
 					Hdr: dns.RR_Header{
 						Name:   dns.Fqdn(question.Name),
