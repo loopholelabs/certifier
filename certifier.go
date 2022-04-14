@@ -159,6 +159,19 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 				c.Logger().Infof("received NS query for valid domain '%s' (ID %d), responding with '%s'\n", question.Name, r.Id, c.public)
 				answers = append(answers, nsRecord)
 				return
+			} else if qualifiers = strings.SplitN(question.Name, ".", 3); len(qualifiers) == 3 && qualifiers[2] == c.root {
+				nsRecord := &dns.NS{
+					Hdr: dns.RR_Header{
+						Name:   dns.Fqdn(question.Name),
+						Rrtype: dns.TypeNS,
+						Class:  dns.ClassINET,
+						Ttl:    86400,
+					},
+					Ns: c.public,
+				}
+				c.Logger().Infof("received NS query for valid domain '%s' (ID %d), responding with '%s'\n", question.Name, r.Id, c.public)
+				answers = append(answers, nsRecord)
+				return
 			} else {
 				c.Logger().Warnf("received NS query for invalid domain '%s' (ID %d)\n", question.Name, r.Id)
 			}
