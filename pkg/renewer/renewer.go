@@ -61,9 +61,9 @@ func (r *Renewer) Renew(id string, domain string, client *lego.Client, privateKe
 	cidr := newCIDRenewer(r, cid, utils.NormalizeDomain(domain))
 	var err error
 	if r.trustedNameservers != nil {
-		err = client.Challenge.SetDNS01Provider(cidr, dns01.AddRecursiveNameservers(r.trustedNameservers))
+		err = client.Challenge.SetDNS01Provider(cidr, dns01.AddRecursiveNameservers(r.trustedNameservers), dns01.DisableCompletePropagationRequirement())
 	} else {
-		err = client.Challenge.SetDNS01Provider(cidr)
+		err = client.Challenge.SetDNS01Provider(cidr, dns01.DisableCompletePropagationRequirement())
 	}
 	if err != nil {
 		return nil, err

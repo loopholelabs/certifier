@@ -115,7 +115,7 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 							Name:   dns.Fqdn(question.Name),
 							Rrtype: dns.TypeTXT,
 							Class:  dns.ClassINET,
-							Ttl:    0,
+							Ttl:    1,
 						},
 						Txt: []string{challenge},
 					}
