@@ -106,6 +106,7 @@ func (c *Certifier) handler(w dns.ResponseWriter, r *dns.Msg) {
 
 func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 	for _, question := range r.Question {
+		question.Name = strings.ToLower(question.Name)
 		switch question.Qtype {
 		case dns.TypeTXT:
 			if qualifiers := strings.SplitN(question.Name, ".", 3); len(qualifiers) == 3 && qualifiers[2] == c.root {
