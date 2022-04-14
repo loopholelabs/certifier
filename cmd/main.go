@@ -96,7 +96,7 @@ func main() {
 	acmeUser.Registration = reg
 
 	go func() {
-		time.Sleep(time.Second * 15)
+		time.Sleep(time.Second * 5)
 		logger.Infof("Starting Cert Renewal, expecting TXT for _acme-challenge.testdomain.loopholelabs.com to point to testdomain-loopholelabs-com.testcid.%s", root)
 		cert, err := c.Renew("userid", "testdomain.loopholelabs.com", acmeClient, privateKey)
 		if err != nil {

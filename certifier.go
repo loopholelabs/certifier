@@ -50,7 +50,7 @@ func New(root string, public string, opts ...Option) *Certifier {
 	return &Certifier{
 		root:    root,
 		public:  dns.Fqdn(public),
-		renewer: renewer.New(options.TrustedNameServers, options.Storage),
+		renewer: renewer.New(options.TrustedNameServers, options.Storage, options.Logger),
 		storage: options.Storage,
 		logger:  options.Logger,
 	}

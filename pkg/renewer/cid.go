@@ -34,12 +34,14 @@ func newCIDRenewer(r *Renewer, cid string) *cidRenewer {
 
 func (c *cidRenewer) Present(domain, _, keyAuth string) error {
 	fqdn, challenge := dns01.GetRecord(domain, keyAuth)
+	c.r.logger.Debugf("setting challenge for CID '%s', FQDN '%s', and challenge '%s'\n", c.cid, fqdn, challenge)
 	c.r.storage.SetChallenge(c.cid, fqdn, challenge)
 	return nil
 }
 
 func (c *cidRenewer) CleanUp(domain, _, keyAuth string) error {
 	fqdn, _ := dns01.GetRecord(domain, keyAuth)
+	c.r.logger.Debugf("cleaning up challenge for CID '%s', FQDN '%s'\n", c.cid, fqdn)
 	c.r.storage.RemoveChallenge(c.cid, fqdn)
 	return nil
 }
