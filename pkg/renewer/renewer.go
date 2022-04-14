@@ -25,7 +25,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/loopholelabs/certifier/internal/utils"
 	"github.com/loopholelabs/certifier/pkg/storage"
-	"github.com/loopholelabs/logging"
 )
 
 var (
@@ -35,14 +34,12 @@ var (
 type Renewer struct {
 	trustedNameservers []string
 	storage            storage.Storage
-	logger             logging.Logger
 }
 
-func New(trustedNameServers []string, storage storage.Storage, logger logging.Logger) *Renewer {
+func New(trustedNameServers []string, storage storage.Storage) *Renewer {
 	return &Renewer{
 		trustedNameservers: trustedNameServers,
 		storage:            storage,
-		logger:             logger,
 	}
 }
 

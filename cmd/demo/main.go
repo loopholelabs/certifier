@@ -25,15 +25,25 @@ import (
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/go-acme/lego/v4/registration"
 	"github.com/loopholelabs/certifier"
+	"github.com/loopholelabs/certifier/internal/utils"
 	"github.com/loopholelabs/certifier/pkg/storage/memory"
 	"github.com/loopholelabs/logging"
+	"os"
 	"time"
 )
 
+const (
+	userID = "userid"
+	CID    = "testcid"
+)
+
 var (
-	listen string
-	root   string
-	public string
+	listen    string
+	root      string
+	public    string
+	directory string
+	email     string
+	domain    string
 )
 
 type User struct {
@@ -61,12 +71,24 @@ func main() {
 	flag.StringVar(&listen, "listen", "", "set the listen address for certifier")
 	flag.StringVar(&root, "root", "", "set the root domain for certifier")
 	flag.StringVar(&public, "public", "", "set the publicly resolvable domain that resolves to certifier")
+	flag.StringVar(&directory, "directory", "", "set the ACME directory URL")
+	flag.StringVar(&email, "email", "", "set the email for your ACME registration")
+	flag.StringVar(&domain, "domain", "", "set the domain to obtain a certificate for")
 	flag.Parse()
+
+	if listen == "" || root == "" || public == "" || directory == "" || email == "" || domain == "" {
+		panic("all required command line args must be filled in: --listen, --root, --public, --directory, --email, --domain")
+	}
+
+	logger.Importantf("In order for this demo to work, you must have this instance of Certifier publicly available on port 53 and accessible on the domain '%s' (via an A record)\n", public)
+	logger.Importantf("You must also have an NS record for '%s' pointing to '%s'\n", root, public)
+	logger.Importantf("And finally, you must have a CNAME record for '_acme-challenge.%s' pointing to '%s.%s.%s'\n", domain, utils.NormalizeDomain(domain), CID, root)
+	logger.Importantf("Without these records, this demo will fail.\n")
 
 	serial := uint32(0)
 	c := certifier.New(root, public, serial, certifier.WithLogger(logger), certifier.WithStorage(storage))
 
-	storage.SetCID("userid", "testcid")
+	storage.SetCID(userID, CID)
 
 	clientPrivateKey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
@@ -79,13 +101,13 @@ func main() {
 	}
 
 	acmeUser := &User{
-		Email: "testemail@testemail.com",
+		Email: email,
 		Key:   clientPrivateKey,
 	}
 
 	acmeConfig := lego.NewConfig(acmeUser)
 
-	acmeConfig.CADirURL = "https://acme-staging-v02.api.letsencrypt.org/directory"
+	acmeConfig.CADirURL = directory
 	acmeConfig.Certificate.KeyType = certcrypto.RSA4096
 
 	acmeClient, err := lego.NewClient(acmeConfig)
@@ -93,7 +115,6 @@ func main() {
 		panic(err)
 	}
 
-	// This is an API Call to the ACME Directory, which can be slow
 	reg, err := acmeClient.Registration.Register(registration.RegisterOptions{TermsOfServiceAgreed: true})
 	if err != nil {
 		panic(err)
@@ -102,14 +123,18 @@ func main() {
 	acmeUser.Registration = reg
 
 	go func() {
-		time.Sleep(time.Second * 5)
-		logger.Infof("Starting Cert Renewal, expecting TXT for _acme-challenge.testdomain.loopholelabs.com to point to testdomain-loopholelabs-com.testcid.%s", root)
-		cert, err := c.Renew("userid", "testdomain.loopholelabs.com", acmeClient, certificatePrivateKey)
+		time.Sleep(time.Second * 2)
+		logger.Infof("Starting Cert Renewal, expecting TXT Record for for '_acme-challenge.%s' to point to '%s.%s.%s", domain, utils.NormalizeDomain(domain), CID, root)
+		cert, err := c.Renew(userID, domain, acmeClient, certificatePrivateKey)
 		if err != nil {
 			panic(err)
 		}
-		logger.Infof("Certificate Retrieved Successfully: %+v\n", cert)
-		logger.Infof("Certificate Contents: %s\n", cert.Certificate)
+		logger.Infof("Certificate Contents: \n%s\n\n", cert.Certificate)
+		err = c.Stop()
+		if err != nil {
+			panic(err)
+		}
+		os.Exit(0)
 	}()
 
 	if err := c.Start(listen); err != nil {

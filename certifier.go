@@ -53,21 +53,26 @@ func New(root string, public string, serial uint32, opts ...Option) *Certifier {
 		root:    root,
 		public:  dns.Fqdn(public),
 		serial:  serial,
-		renewer: renewer.New(options.TrustedNameServers, options.Storage, options.Logger),
+		renewer: renewer.New(options.TrustedNameServers, options.Storage),
 		storage: options.Storage,
 		logger:  options.Logger,
 	}
 }
 
 func (c *Certifier) Start(addr string) error {
-	server := &dns.Server{
+	c.server = &dns.Server{
 		Addr:    addr,
 		Net:     Network,
 		Handler: dns.HandlerFunc(c.handler),
 	}
 
 	c.Logger().Infof("starting certifier on address %s with root domain %s\n", addr, c.root)
-	return server.ListenAndServe()
+	return c.server.ListenAndServe()
+}
+
+func (c *Certifier) Stop() error {
+	c.Logger().Infof("stopping certifier\n")
+	return c.server.Shutdown()
 }
 
 func (c *Certifier) RegisterCID(id string) string {
@@ -86,6 +91,10 @@ func (c *Certifier) Renew(id string, domain string, client *lego.Client, private
 	}
 
 	return cert, err
+}
+
+func (c *Certifier) Logger() logging.Logger {
+	return c.logger
 }
 
 func (c *Certifier) handler(w dns.ResponseWriter, r *dns.Msg) {
@@ -241,8 +250,4 @@ func (c *Certifier) handleQuestions(r *dns.Msg) (answers []dns.RR, rcode int) {
 		}
 	}
 	return nil, dns.RcodeNameError
-}
-
-func (c *Certifier) Logger() logging.Logger {
-	return c.logger
 }
