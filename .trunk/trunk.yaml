@@ -1,0 +1,10 @@
+version: 0.1
+cli:
+  version: 0.10.0-beta
+lint:
+  enabled:
+    - gitleaks@8.3.0
+    - gofmt@1.16.7
+    - golangci-lint@1.42.1
+    - markdownlint@0.31.1
+    - prettier@2.5.1
