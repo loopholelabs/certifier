@@ -2,8 +2,6 @@ module github.com/loopholelabs/certifier
 
 go 1.17
 
-replace github.com/go-acme/lego/v4 v4.6.0 => github.com/loopholelabs/lego/v4 v4.6.1-0.20220414220622-2c9352b24cc8
-
 require (
 	github.com/go-acme/lego/v4 v4.6.0
 	github.com/google/uuid v1.3.0
