@@ -14,11 +14,13 @@
 	limitations under the License.
 */
 
-package certifier
+// Package options contains the options (and default values) used to configure
+// DNS and Certificate management
+package options
 
 import (
+	"github.com/loopholelabs/certifier/internal/memory"
 	"github.com/loopholelabs/certifier/pkg/storage"
-	"github.com/loopholelabs/certifier/pkg/storage/memory"
 	"github.com/loopholelabs/logging"
 	"github.com/rs/zerolog"
 	"io/ioutil"
@@ -41,6 +43,7 @@ var DefaultTrustedNameServers = []string{
 	"1.0.0.1:53",
 }
 
+// init initializes the DefaultLogger and sets up the DefaultStorage
 func init() {
 	l := zerolog.New(ioutil.Discard)
 	DefaultLogger = logging.ConvertZerolog(&l)
@@ -61,7 +64,9 @@ type Options struct {
 	TrustedNameServers []string
 }
 
-func loadOptions(options ...Option) *Options {
+// LoadOptions takes a variadic number of Option variables and returns a *Options struct that contains default
+// sanitized values.
+func LoadOptions(options ...Option) *Options {
 	opts := new(Options)
 	for _, option := range options {
 		option(opts)

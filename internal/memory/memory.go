@@ -14,11 +14,13 @@
 	limitations under the License.
 */
 
+// Package memory is a simple in-memory implementation of the storage.Storage interface
+
 package memory
 
 import (
-	"github.com/loopholelabs/certifier/internal/utils"
 	"github.com/loopholelabs/certifier/pkg/storage"
+	"github.com/loopholelabs/certifier/pkg/utils"
 	"sync"
 )
 
