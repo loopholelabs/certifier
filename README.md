@@ -22,7 +22,7 @@ There are two parts to certifier - the DNS Server and the ACME manager.
 
 The DNS Server is quite simple - it only responds to TXT Record queries for subdomains of a single given root domain.
 This means that if the certifier is configured with the root domain `acme.mydomain.com`, it will only respond to TXT queries
-for the domains matching `*.*.acme.mydomain.com`. It will also respond to NS Record queries and SOA Record Queries for the root domain 
+for the domains matching `*.*.acme.mydomain.com`. It will also respond to NS Record queries and SOA Record Queries for the root domain
 and all of its subdomains.
 
 The ACME manager makes use of the [Lego ACME](https://go-acme.github.io/lego) Library to begin and complete `DNS-01` challenges.
