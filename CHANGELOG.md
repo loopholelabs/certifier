@@ -8,6 +8,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Changes
+
 - Refactoring the renewer package into `pkg/acme` package
 - Refactoring certifier's DNS server into its own `pkg/dns` package
 - Adding test cases for the `pkg/dns` package
