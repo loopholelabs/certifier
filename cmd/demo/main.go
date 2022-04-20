@@ -25,8 +25,9 @@ import (
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/go-acme/lego/v4/registration"
 	"github.com/loopholelabs/certifier"
-	"github.com/loopholelabs/certifier/internal/utils"
-	"github.com/loopholelabs/certifier/pkg/storage/memory"
+	"github.com/loopholelabs/certifier/internal/memory"
+	"github.com/loopholelabs/certifier/pkg/options"
+	"github.com/loopholelabs/certifier/pkg/utils"
 	"github.com/loopholelabs/logging"
 	"os"
 	"time"
@@ -85,9 +86,10 @@ func main() {
 	logger.Importantf("And finally, you must have a CNAME record for '_acme-challenge.%s' pointing to '%s.%s.%s'\n", domain, utils.NormalizeDomain(domain), CID, root)
 	logger.Importantf("Without these records, this demo will fail.\n")
 
-	serial := uint32(0)
-	c := certifier.New(root, public, serial, certifier.WithLogger(logger), certifier.WithStorage(storage))
+	c := certifier.New(root, public, options.WithLogger(logger), options.WithStorage(storage))
 
+	// normally you would use c.RegisterCID, but we want to use a hard-coded CID, not a randomly generated one so we are
+	// setting the value in storage manually
 	storage.SetCID(userID, CID)
 
 	clientPrivateKey, err := rsa.GenerateKey(rand.Reader, 4096)
@@ -130,7 +132,7 @@ func main() {
 			panic(err)
 		}
 		logger.Infof("Certificate Contents: \n%s\n\n", cert.Certificate)
-		err = c.Stop()
+		err = c.Shutdown()
 		if err != nil {
 			panic(err)
 		}

@@ -14,14 +14,34 @@
 	limitations under the License.
 */
 
+// Package storage contains the storage interface
+// that Certifier expects to use
 package storage
 
+// Storage is the storage interface that Certifier uses
+// to map CIDs with User IDs and work with DNS-01 Challenges
 type Storage interface {
+	// SetCID sets the CertifierID (CID) for a given ID
 	SetCID(id string, cid string)
+
+	// GetCID retrieves the CID for a given ID
 	GetCID(id string) (cid string, ok bool)
+
+	// RemoveCID removes the CID for a given ID
 	RemoveCID(id string)
 
+	// SetChallenge sets the challenge string given a CID and a domain
+	//
+	// It is the responsibility of the implementation to normalize the given domain (replace periods with hyphens)
 	SetChallenge(cid string, domain string, challenge string)
+
+	// GetChallenge retrieves the challenge string given a CID and a domain
+	//
+	// It is the responsibility of the implementation to normalize the given domain (replace periods with hyphens)
 	GetChallenge(cid string, domain string) (challenge string, ok bool)
+
+	// RemoveChallenge removes the CID for a given ID
+	//
+	// It is the responsibility of the implementation to normalize the given domain (replace periods with hyphens)
 	RemoveChallenge(cid string, domain string)
 }
