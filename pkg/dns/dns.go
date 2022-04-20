@@ -30,6 +30,12 @@ import (
 const (
 	Network = "udp"
 	Mbox    = "admin."
+
+	ShortTTL = 1
+	LongTTL  = 86400
+	Refresh  = 14400
+	Retry    = 3600
+	Expire   = 604800
 )
 
 // DNS is a DNS Server designed to respond to ACME DNS-01 Challenges
@@ -151,7 +157,7 @@ func (d *DNS) defaultTXT(domain string) *dns.TXT {
 			Name:   dns.Fqdn(domain),
 			Rrtype: dns.TypeTXT,
 			Class:  dns.ClassINET,
-			Ttl:    1,
+			Ttl:    ShortTTL,
 		},
 	}
 }
@@ -171,7 +177,7 @@ func (d *DNS) defaultNS(domain string) *dns.NS {
 			Name:   dns.Fqdn(domain),
 			Rrtype: dns.TypeNS,
 			Class:  dns.ClassINET,
-			Ttl:    86400,
+			Ttl:    LongTTL,
 		},
 	}
 }
@@ -191,12 +197,12 @@ func (d *DNS) defaultSOA(domain string) *dns.SOA {
 			Name:   dns.Fqdn(domain),
 			Rrtype: dns.TypeSOA,
 			Class:  dns.ClassINET,
-			Ttl:    86400,
+			Ttl:    LongTTL,
 		},
-		Refresh: 14400,
-		Retry:   3600,
-		Expire:  604800,
-		Minttl:  86400,
+		Refresh: Refresh,
+		Retry:   Retry,
+		Expire:  Expire,
+		Minttl:  LongTTL,
 	}
 }
 

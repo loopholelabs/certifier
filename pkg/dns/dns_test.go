@@ -54,7 +54,7 @@ func TestTXT(t *testing.T) {
 	assert.Equal(t, dns.Fqdn(domain), txt.Hdr.Name)
 	assert.Equal(t, uint16(dns.ClassINET), txt.Hdr.Class)
 	assert.Equal(t, dns.TypeTXT, txt.Hdr.Rrtype)
-	assert.Equal(t, uint32(1), txt.Hdr.Ttl)
+	assert.Equal(t, uint32(ShortTTL), txt.Hdr.Ttl)
 
 	t.Run("valid", func(t *testing.T) {
 		ok, domain, cid := d.validTXT("testdomain.cid.example.subdomain.com")
@@ -86,7 +86,7 @@ func TestNS(t *testing.T) {
 	assert.Equal(t, dns.Fqdn(domain), ns.Hdr.Name)
 	assert.Equal(t, uint16(dns.ClassINET), ns.Hdr.Class)
 	assert.Equal(t, dns.TypeNS, ns.Hdr.Rrtype)
-	assert.Equal(t, uint32(86400), ns.Hdr.Ttl)
+	assert.Equal(t, uint32(LongTTL), ns.Hdr.Ttl)
 
 	t.Run("valid", func(t *testing.T) {
 		ok := d.validNS("testdomain.cid.example.subdomain.com")
@@ -120,11 +120,11 @@ func TestSOA(t *testing.T) {
 	assert.Equal(t, dns.Fqdn(domain), soa.Hdr.Name)
 	assert.Equal(t, uint16(dns.ClassINET), soa.Hdr.Class)
 	assert.Equal(t, dns.TypeSOA, soa.Hdr.Rrtype)
-	assert.Equal(t, uint32(86400), soa.Hdr.Ttl)
-	assert.Equal(t, uint32(14400), soa.Refresh)
-	assert.Equal(t, uint32(3600), soa.Retry)
-	assert.Equal(t, uint32(604800), soa.Expire)
-	assert.Equal(t, uint32(86400), soa.Minttl)
+	assert.Equal(t, uint32(LongTTL), soa.Hdr.Ttl)
+	assert.Equal(t, uint32(Refresh), soa.Refresh)
+	assert.Equal(t, uint32(Retry), soa.Retry)
+	assert.Equal(t, uint32(Expire), soa.Expire)
+	assert.Equal(t, uint32(LongTTL), soa.Minttl)
 
 	t.Run("valid", func(t *testing.T) {
 		ok := d.validSOA("testdomain.cid.example.subdomain.com")
