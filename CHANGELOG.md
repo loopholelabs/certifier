@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [v0.2.0] - 2022-04-20
+
 ### Changes
 
 - Refactoring the renewer package into `pkg/acme` package
@@ -21,5 +23,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 Initial Release of Certifier
 
-[unreleased]: https://github.com/loopholelabs/certifier/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/loopholelabs/certifier/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.com/loopholelabs/certifier/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/loopholelabs/certifier/releases/tag/v0.1.0
