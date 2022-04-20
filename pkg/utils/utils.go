@@ -14,10 +14,12 @@
 	limitations under the License.
 */
 
+// Package utils contains a set of utility functions
 package utils
 
 import "strings"
 
+// NormalizeDomain replaces all the periods in a domain (example.com) with hyphens (example-com)
 func NormalizeDomain(domain string) string {
 	if domain == "" {
 		return ""
@@ -25,7 +27,7 @@ func NormalizeDomain(domain string) string {
 	return strings.ReplaceAll(domain, ".", "-")
 }
 
-// JoinStrings combines multiple strings together using the strings.Builder class
+// JoinStrings combines multiple strings together using the strings.Builder struct
 func JoinStrings(s ...string) string {
 	var b strings.Builder
 	for _, str := range s {
