@@ -40,10 +40,15 @@ func New() *Memory {
 	}
 }
 
-func (m *Memory) SetCID(id string, cid string) {
+func (m *Memory) SetCID(id string, cid string) error {
 	m.cidsMu.Lock()
+	if _, ok := m.cids[id]; ok {
+		m.cidsMu.Unlock()
+		return storage.ErrAlreadyExists
+	}
 	m.cids[id] = cid
 	m.cidsMu.Unlock()
+	return nil
 }
 
 func (m *Memory) GetCID(id string) (cid string, ok bool) {
@@ -53,16 +58,27 @@ func (m *Memory) GetCID(id string) (cid string, ok bool) {
 	return
 }
 
-func (m *Memory) RemoveCID(id string) {
+func (m *Memory) RemoveCID(id string) error {
 	m.cidsMu.Lock()
+	if _, ok := m.cids[id]; !ok {
+		m.cidsMu.Unlock()
+		return storage.ErrNotFound
+	}
 	delete(m.cids, id)
 	m.cidsMu.Unlock()
+	return nil
 }
 
-func (m *Memory) SetChallenge(cid string, domain string, challenge string) {
+func (m *Memory) SetChallenge(cid string, domain string, challenge string) error {
 	m.challengesMu.Lock()
-	m.challenges[appendDomainToCID(cid, domain)] = challenge
+	key := appendDomainToCID(cid, domain)
+	if _, ok := m.challenges[key]; ok {
+		m.challengesMu.Unlock()
+		return storage.ErrAlreadyExists
+	}
+	m.challenges[key] = challenge
 	m.challengesMu.Unlock()
+	return nil
 }
 
 func (m *Memory) GetChallenge(cid string, domain string) (challenge string, ok bool) {
@@ -72,10 +88,16 @@ func (m *Memory) GetChallenge(cid string, domain string) (challenge string, ok b
 	return
 }
 
-func (m *Memory) RemoveChallenge(cid string, domain string) {
+func (m *Memory) RemoveChallenge(cid string, domain string) error {
 	m.challengesMu.Lock()
+	key := appendDomainToCID(cid, domain)
+	if _, ok := m.challenges[key]; !ok {
+		m.challengesMu.Unlock()
+		return storage.ErrNotFound
+	}
 	delete(m.challenges, appendDomainToCID(cid, domain))
 	m.challengesMu.Unlock()
+	return nil
 }
 
 func appendDomainToCID(cid string, domain string) string {

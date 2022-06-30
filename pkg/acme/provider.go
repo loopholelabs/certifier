@@ -34,14 +34,20 @@ func newProvider(cid string, domain string, options *options.Options) *provider 
 // Present fulfills the challenge.Provider.Present interface function
 func (p *provider) Present(domain, _, keyAuth string) error {
 	_, challengeKey := dns01.GetRecord(domain, keyAuth)
-	p.storage().SetChallenge(p.cid, p.domain, challengeKey)
+	err := p.storage().SetChallenge(p.cid, p.domain, challengeKey)
+	if err != nil {
+		return err
+	}
 	p.logger().Debugf("setting challengeKey '%s' for CID '%s' and domain '%s'\n", challengeKey, p.cid, p.domain)
 	return nil
 }
 
 // CleanUp fulfills the challenge.Provider.CleanUp interface function
 func (p *provider) CleanUp(_, _, _ string) error {
-	p.storage().RemoveChallenge(p.cid, p.domain)
+	err := p.storage().RemoveChallenge(p.cid, p.domain)
+	if err != nil {
+		return err
+	}
 	p.logger().Debugf("removing challengeKey for CID '%s' and domain '%s'\n", p.cid, p.domain)
 	return nil
 }
