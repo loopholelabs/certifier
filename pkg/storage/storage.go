@@ -18,22 +18,32 @@
 // that Certifier expects to use
 package storage
 
+import "errors"
+
+var (
+	// ErrNotFound is returned when a requested item is not found
+	ErrNotFound = errors.New("not found")
+
+	// ErrAlreadyExists is returned when a CID is already in use
+	ErrAlreadyExists = errors.New("already exists")
+)
+
 // Storage is the storage interface that Certifier uses
 // to map CIDs with User IDs and work with DNS-01 Challenges
 type Storage interface {
 	// SetCID sets the CertifierID (CID) for a given ID
-	SetCID(id string, cid string)
+	SetCID(id string, cid string) (err error)
 
 	// GetCID retrieves the CID for a given ID
 	GetCID(id string) (cid string, ok bool)
 
 	// RemoveCID removes the CID for a given ID
-	RemoveCID(id string)
+	RemoveCID(id string) (err error)
 
 	// SetChallenge sets the challenge string given a CID and a domain
 	//
 	// It is the responsibility of the implementation to normalize the given domain (replace periods with hyphens)
-	SetChallenge(cid string, domain string, challenge string)
+	SetChallenge(cid string, domain string, challenge string) (err error)
 
 	// GetChallenge retrieves the challenge string given a CID and a domain
 	//
@@ -43,5 +53,5 @@ type Storage interface {
 	// RemoveChallenge removes the CID for a given ID
 	//
 	// It is the responsibility of the implementation to normalize the given domain (replace periods with hyphens)
-	RemoveChallenge(cid string, domain string)
+	RemoveChallenge(cid string, domain string) (err error)
 }
