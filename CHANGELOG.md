@@ -7,6 +7,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [v0.3.0] - 2022-06-30
+
+### Changes
+
+- `pkg/storage` now requires errors to be returned in certain scenarios
+- `internal/memory` implements the updated `storage` package interface and returns the proper errors
+
 ## [v0.2.0] - 2022-04-20
 
 ### Changes
@@ -23,6 +30,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 Initial Release of Certifier
 
-[unreleased]: https://github.com/loopholelabs/certifier/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/loopholelabs/certifier/compare/v0.3.0...HEAD
+[v0.3.0]: https://github.com/loopholelabs/certifier/releases/tag/v0.3.0
 [v0.2.0]: https://github.com/loopholelabs/certifier/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/loopholelabs/certifier/releases/tag/v0.1.0

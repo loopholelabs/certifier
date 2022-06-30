@@ -50,11 +50,14 @@ func New(opts ...options.Option) *ACME {
 }
 
 // RegisterCID registers a CID for a given ID and returns the generated CID
-func (a *ACME) RegisterCID(id string) (cid string) {
-	cid = uuid.New().String()
-	a.storage().SetCID(id, cid)
+func (a *ACME) RegisterCID(id string) (string, error) {
+	cid := uuid.New().String()
+	err := a.storage().SetCID(id, cid)
+	if err != nil {
+		return "", err
+	}
 	a.logger().Debugf("registered new CID '%s' for ID '%s'\n", cid, id)
-	return
+	return cid, nil
 }
 
 // Renew obtains an SSL Certificate using the DNS-01 Challenge for a given lego.Client and rsa.PrivateKey

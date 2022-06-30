@@ -56,7 +56,7 @@ func (c *Certifier) Shutdown() error {
 }
 
 // RegisterCID registers a CID for a given ID and returns the generated CID
-func (c *Certifier) RegisterCID(id string) string {
+func (c *Certifier) RegisterCID(id string) (string, error) {
 	return c.acme.RegisterCID(id)
 }
 
