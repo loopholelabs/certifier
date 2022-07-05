@@ -7,6 +7,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [v0.3.1] - 2022-07-05
+
+### Changes
+
+- References to DNS-specific challenge providers are now more specific, and this should make it easier
+  to support challenge types like the TLS-ALPN-01 challenge and the HTTP-01 challenge in the future
+- Some extra logging has been added to make debugging errors easier
+
 ## [v0.3.0] - 2022-06-30
 
 ### Changes
@@ -30,7 +38,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 Initial Release of Certifier
 
-[unreleased]: https://github.com/loopholelabs/certifier/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/loopholelabs/certifier/compare/v0.3.1...HEAD
+[v0.3.1]: https://github.com/loopholelabs/certifier/releases/tag/v0.3.1
 [v0.3.0]: https://github.com/loopholelabs/certifier/releases/tag/v0.3.0
 [v0.2.0]: https://github.com/loopholelabs/certifier/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/loopholelabs/certifier/releases/tag/v0.1.0

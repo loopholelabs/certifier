@@ -60,7 +60,7 @@ func (c *Certifier) RegisterCID(id string) (string, error) {
 	return c.acme.RegisterCID(id)
 }
 
-// Renew obtains an SSL Certificate using the DNS-01 Challenge for a given lego.Client and rsa.PrivateKey
-func (c *Certifier) Renew(id string, domain string, client *lego.Client, privateKey *rsa.PrivateKey) (*certificate.Resource, error) {
-	return c.acme.Renew(id, domain, client, privateKey)
+// RenewDNS obtains an SSL Certificate using the DNS-01 Challenge for a given lego.Client and rsa.PrivateKey
+func (c *Certifier) RenewDNS(id string, domain string, client *lego.Client, privateKey *rsa.PrivateKey) (*certificate.Resource, error) {
+	return c.acme.RenewDNS(id, domain, client, privateKey)
 }

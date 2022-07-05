@@ -18,7 +18,9 @@
 // that Certifier expects to use
 package storage
 
-import "errors"
+import (
+	"errors"
+)
 
 var (
 	// ErrNotFound is returned when a requested item is not found
@@ -40,18 +42,18 @@ type Storage interface {
 	// RemoveCID removes the CID for a given ID
 	RemoveCID(id string) (err error)
 
-	// SetChallenge sets the challenge string given a CID and a domain
+	// SetDNSChallenge sets the DNS challenge string given a CID and a domain
 	//
 	// It is the responsibility of the implementation to normalize the given domain (replace periods with hyphens)
-	SetChallenge(cid string, domain string, challenge string) (err error)
+	SetDNSChallenge(cid string, domain string, challenge string) (err error)
 
-	// GetChallenge retrieves the challenge string given a CID and a domain
+	// GetDNSChallenge retrieves the DNS challenge string given a CID and a domain
 	//
 	// It is the responsibility of the implementation to normalize the given domain (replace periods with hyphens)
-	GetChallenge(cid string, domain string) (challenge string, ok bool)
+	GetDNSChallenge(cid string, domain string) (challenge string, ok bool)
 
-	// RemoveChallenge removes the CID for a given ID
+	// RemoveDNSChallenge removes the DNS challenge string given a CID and a domain
 	//
 	// It is the responsibility of the implementation to normalize the given domain (replace periods with hyphens)
-	RemoveChallenge(cid string, domain string) (err error)
+	RemoveDNSChallenge(cid string, domain string) (err error)
 }

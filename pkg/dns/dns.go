@@ -99,7 +99,7 @@ func (d *DNS) handler(w dns.ResponseWriter, r *dns.Msg) {
 			switch question.Qtype {
 			case dns.TypeTXT:
 				if ok, domain, cid := d.validTXT(question.Name); ok {
-					if challenge, ok := d.storage().GetChallenge(cid, domain); ok {
+					if challenge, ok := d.storage().GetDNSChallenge(cid, domain); ok {
 						txtRecord := d.defaultTXT(question.Name)
 						txtRecord.Txt = []string{challenge}
 						d.logger().Infof("received TXT query for valid CID '%s' and domain '%s' (ID %d), responding with '%s'\n", cid, domain, r.Id, challenge)
@@ -138,7 +138,10 @@ func (d *DNS) handler(w dns.ResponseWriter, r *dns.Msg) {
 		m.Rcode = dns.RcodeRefused
 	}
 
-	_ = w.WriteMsg(m)
+	err := w.WriteMsg(m)
+	if err != nil {
+		d.logger().Errorf("error writing DNS response: %s\n", err)
+	}
 }
 
 // validTXT checks whether the given domain is valid for returning TXT Records

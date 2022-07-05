@@ -27,16 +27,16 @@ import (
 var _ storage.Storage = (*Memory)(nil)
 
 type Memory struct {
-	cids         map[string]string
-	cidsMu       sync.RWMutex
-	challenges   map[string]string
-	challengesMu sync.RWMutex
+	cids            map[string]string
+	cidsMu          sync.RWMutex
+	dnsChallenges   map[string]string
+	dnsChallengesMu sync.RWMutex
 }
 
 func New() *Memory {
 	return &Memory{
-		cids:       make(map[string]string),
-		challenges: make(map[string]string),
+		cids:          make(map[string]string),
+		dnsChallenges: make(map[string]string),
 	}
 }
 
@@ -69,34 +69,34 @@ func (m *Memory) RemoveCID(id string) error {
 	return nil
 }
 
-func (m *Memory) SetChallenge(cid string, domain string, challenge string) error {
-	m.challengesMu.Lock()
+func (m *Memory) SetDNSChallenge(cid string, domain string, challenge string) error {
+	m.dnsChallengesMu.Lock()
 	key := appendDomainToCID(cid, domain)
-	if _, ok := m.challenges[key]; ok {
-		m.challengesMu.Unlock()
+	if _, ok := m.dnsChallenges[key]; ok {
+		m.dnsChallengesMu.Unlock()
 		return storage.ErrAlreadyExists
 	}
-	m.challenges[key] = challenge
-	m.challengesMu.Unlock()
+	m.dnsChallenges[key] = challenge
+	m.dnsChallengesMu.Unlock()
 	return nil
 }
 
-func (m *Memory) GetChallenge(cid string, domain string) (challenge string, ok bool) {
-	m.challengesMu.RLock()
-	challenge, ok = m.challenges[appendDomainToCID(cid, domain)]
-	m.challengesMu.RUnlock()
+func (m *Memory) GetDNSChallenge(cid string, domain string) (challenge string, ok bool) {
+	m.dnsChallengesMu.RLock()
+	challenge, ok = m.dnsChallenges[appendDomainToCID(cid, domain)]
+	m.dnsChallengesMu.RUnlock()
 	return
 }
 
-func (m *Memory) RemoveChallenge(cid string, domain string) error {
-	m.challengesMu.Lock()
+func (m *Memory) RemoveDNSChallenge(cid string, domain string) error {
+	m.dnsChallengesMu.Lock()
 	key := appendDomainToCID(cid, domain)
-	if _, ok := m.challenges[key]; !ok {
-		m.challengesMu.Unlock()
+	if _, ok := m.dnsChallenges[key]; !ok {
+		m.dnsChallengesMu.Unlock()
 		return storage.ErrNotFound
 	}
-	delete(m.challenges, appendDomainToCID(cid, domain))
-	m.challengesMu.Unlock()
+	delete(m.dnsChallenges, appendDomainToCID(cid, domain))
+	m.dnsChallengesMu.Unlock()
 	return nil
 }
 
