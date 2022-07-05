@@ -5,7 +5,6 @@ go 1.17
 require (
 	github.com/go-acme/lego/v4 v4.6.0
 	github.com/google/uuid v1.3.0
-	github.com/letsencrypt/pebble/v2 v2.4.0
 	github.com/loopholelabs/logging v0.1.1
 	github.com/miekg/dns v1.1.48
 	github.com/rs/zerolog v1.26.1
@@ -15,8 +14,8 @@ require (
 require (
 	github.com/cenkalti/backoff/v4 v4.1.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/gookit/color v1.5.0 // indirect
-	github.com/letsencrypt/challtestsrv v1.2.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778 // indirect
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
