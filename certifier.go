@@ -52,16 +52,6 @@ func (c *Certifier) Shutdown() error {
 	return c.dns.Shutdown()
 }
 
-// RegisterCID registers a CID for a given ID and returns the generated CID
-func (c *Certifier) RegisterCID(id string) (string, error) {
-	return c.acme.RegisterCID(id)
-}
-
-// DNS returns the dns.DNS instance for this instance of Certifier
-func (c *Certifier) DNS() *dns.DNS {
-	return c.dns
-}
-
 // ACME returns the acme.ACME instance for this instance of Certifier
 func (c *Certifier) ACME() *acme.ACME {
 	return c.acme

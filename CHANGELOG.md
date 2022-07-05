@@ -7,6 +7,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [v0.3.2] - 2022-07-05
+
+### Fixes
+
+- Fixing major bug in DNS server that would always return an `NXDOMAIN` error regardless of whether the domain was actually valid
+
+### Changes
+
+- Replacing the `RegisterCID` and `RenewDNS` function in `certifier.Certifier` with an `ACME` function that can be used instead. To call `RegisterCID`, simply call `certifier.ACME().RegisterCID()` - same with `RenewDNS`, simply call `certifier.ACME().RenewDNS()`
+
 ## [v0.3.1] - 2022-07-05
 
 ### Changes
@@ -38,7 +48,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 Initial Release of Certifier
 
-[unreleased]: https://github.com/loopholelabs/certifier/compare/v0.3.1...HEAD
+[unreleased]: https://github.com/loopholelabs/certifier/compare/v0.3.2...HEAD
+[v0.3.2]: https://github.com/loopholelabs/certifier/releases/tag/v0.3.2
 [v0.3.1]: https://github.com/loopholelabs/certifier/releases/tag/v0.3.1
 [v0.3.0]: https://github.com/loopholelabs/certifier/releases/tag/v0.3.0
 [v0.2.0]: https://github.com/loopholelabs/certifier/releases/tag/v0.2.0
