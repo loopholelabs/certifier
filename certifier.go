@@ -18,9 +18,6 @@
 package certifier
 
 import (
-	"crypto/rsa"
-	"github.com/go-acme/lego/v4/certificate"
-	"github.com/go-acme/lego/v4/lego"
 	"github.com/loopholelabs/certifier/pkg/acme"
 	"github.com/loopholelabs/certifier/pkg/dns"
 	"github.com/loopholelabs/certifier/pkg/options"
@@ -60,7 +57,12 @@ func (c *Certifier) RegisterCID(id string) (string, error) {
 	return c.acme.RegisterCID(id)
 }
 
-// RenewDNS obtains an SSL Certificate using the DNS-01 Challenge for a given lego.Client and rsa.PrivateKey
-func (c *Certifier) RenewDNS(id string, domain string, client *lego.Client, privateKey *rsa.PrivateKey) (*certificate.Resource, error) {
-	return c.acme.RenewDNS(id, domain, client, privateKey)
+// DNS returns the dns.DNS instance for this instance of Certifier
+func (c *Certifier) DNS() *dns.DNS {
+	return c.dns
+}
+
+// ACME returns the acme.ACME instance for this instance of Certifier
+func (c *Certifier) ACME() *acme.ACME {
+	return c.acme
 }

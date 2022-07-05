@@ -138,6 +138,10 @@ func (d *DNS) handler(w dns.ResponseWriter, r *dns.Msg) {
 		m.Rcode = dns.RcodeRefused
 	}
 
+	if len(m.Answer) > 0 {
+		m.Rcode = dns.RcodeSuccess
+	}
+
 	err := w.WriteMsg(m)
 	if err != nil {
 		d.logger().Errorf("error writing DNS response: %s\n", err)
