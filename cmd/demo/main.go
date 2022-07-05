@@ -90,7 +90,10 @@ func main() {
 
 	// normally you would use c.RegisterCID, but we want to use a hard-coded CID, not a randomly generated one so we are
 	// setting the value in storage manually
-	storage.SetCID(userID, CID)
+	err := storage.SetCID(userID, CID)
+	if err != nil {
+		panic(err)
+	}
 
 	clientPrivateKey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
@@ -127,7 +130,7 @@ func main() {
 	go func() {
 		time.Sleep(time.Second * 2)
 		logger.Infof("Starting Cert Renewal, expecting TXT Record for for '_acme-challenge.%s' to point to '%s.%s.%s", domain, utils.NormalizeDomain(domain), CID, root)
-		cert, err := c.Renew(userID, domain, acmeClient, certificatePrivateKey)
+		cert, err := c.RenewDNS(userID, domain, acmeClient, certificatePrivateKey)
 		if err != nil {
 			panic(err)
 		}
