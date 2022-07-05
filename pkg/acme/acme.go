@@ -14,7 +14,8 @@
 	limitations under the License.
 */
 
-// Package acme handles all the interactions with an ACME server when performing a DNS-01 Challenge
+// Package acme handles all the interactions with an ACME server when
+// performing a DNS-01 Challenge
 package acme
 
 import (
@@ -25,6 +26,7 @@ import (
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/google/uuid"
 	"github.com/loopholelabs/certifier/pkg/options"
+	"github.com/loopholelabs/certifier/pkg/provider"
 	"github.com/loopholelabs/certifier/pkg/storage"
 	"github.com/loopholelabs/certifier/pkg/utils"
 	"github.com/loopholelabs/logging"
@@ -60,16 +62,15 @@ func (a *ACME) RegisterCID(id string) (string, error) {
 	return cid, nil
 }
 
-// Renew obtains an SSL Certificate using the DNS-01 Challenge for a given lego.Client and rsa.PrivateKey
-func (a *ACME) Renew(id string, domain string, client *lego.Client, privateKey *rsa.PrivateKey) (*certificate.Resource, error) {
-	a.logger().Debugf("starting certificate renewal for id '%s' and domain '%s'\n", id, domain)
+// RenewDNS obtains an SSL Certificate using the DNS-01 Challenge for a given lego.Client and rsa.PrivateKey
+func (a *ACME) RenewDNS(id string, domain string, client *lego.Client, privateKey *rsa.PrivateKey) (*certificate.Resource, error) {
+	a.logger().Debugf("starting DNS certificate renewal for id '%s' and domain '%s'\n", id, domain)
 	cid, ok := a.storage().GetCID(id)
 	if !ok {
 		return nil, IDNotFoundError
 	}
 
-	provider := newProvider(cid, utils.NormalizeDomain(domain), a.options)
-	err := client.Challenge.SetDNS01Provider(provider, dns01.AddRecursiveNameservers(a.trustedNameServers()))
+	err := client.Challenge.SetDNS01Provider(provider.New(cid, utils.NormalizeDomain(domain), a.options), dns01.AddRecursiveNameservers(a.trustedNameServers()))
 	if err != nil {
 		return nil, err
 	}
