@@ -8,7 +8,7 @@ require (
 	github.com/loopholelabs/logging v0.1.1
 	github.com/miekg/dns v1.1.48
 	github.com/rs/zerolog v1.26.1
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.9.0
 )
 
 require (
@@ -26,5 +26,5 @@ require (
 	golang.org/x/tools v0.1.10 // indirect
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
