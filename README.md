@@ -1,6 +1,7 @@
 # Certifier
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-brightgreen.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Discord](https://dcbadge.vercel.app/api/server/JYmFhtdPeu?style=flat)](https://loopholelabs.io/discord)
 [![go-doc](https://godoc.org/github.com/loopholelabs/certifier?status.svg)](https://godoc.org/github.com/loopholelabs/certifier)
 
 Certifier is a library designed to make it easy to obtain ACME TLS certificates
