@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/go-acme/lego/v4 v4.6.0
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.6.0
 	github.com/loopholelabs/logging v0.1.1
 	github.com/miekg/dns v1.1.48
 	github.com/rs/zerolog v1.26.1
