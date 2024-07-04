@@ -7,15 +7,6 @@ Certifier is a library designed to make it easy to obtain ACME TLS certificates
 using the DNS-01 Challenge. Certifier is not designed to work as a standalone-CLI, but instead
 it is designed to be embedded within other Golang applications.
 
-**This library requires Go1.17 or later.**
-
-## Important note about releases and stability
-
-This repository generally follows [Semantic Versioning](https://semver.org/). However, **this library is currently in
-Beta** and is still considered experimental. Breaking changes of the library will _not_ trigger a new major release. The
-same is true for selected other new features explicitly marked as
-**EXPERIMENTAL** in CHANGELOG.md.
-
 ## Architecture
 
 There are two parts to certifier - the DNS Server and the ACME manager.
