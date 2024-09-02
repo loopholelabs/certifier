@@ -1,11 +1,10 @@
 module github.com/loopholelabs/certifier
 
 go 1.22
-
-toolchain go1.22.2
+toolchain go1.22.5
 
 require (
-	github.com/go-acme/lego/v4 v4.17.4
+	github.com/go-acme/lego/v4 v4.18.0
 	github.com/google/uuid v1.6.0
 	github.com/loopholelabs/logging v0.1.2
 	github.com/miekg/dns v1.1.61
